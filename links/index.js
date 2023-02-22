@@ -4,6 +4,7 @@ var configJson = require("../config.json");
 
 // Function to scroll to the bottom of the page
 async function infiniteScroll(page) {
+  console.log("Scrolling to the bottom of the page...");
   await page.evaluate(async () => {
     await new Promise((resolve, reject) => {
       var totalHeight = 0;
@@ -71,26 +72,27 @@ async function main() {
           return el.map((e) => e.href);
         });
 
-        allLinks.concat(links);
+        allLinks = allLinks.concat(links);
 
-        // Write the links in a file
-        const finalObject = {
-          [scrappedLink.name]: allLinks,
-        };
-
-        let data = JSON.stringify(finalObject);
-        fs.appendFile("data.json", data.slice(1, data.length - 1), (err) => {
-          if (err) throw err;
-        });
-
-        console.log(scrappedLink.name + " : Page " + i + " done !")
+        console.log(scrappedLink.name + " : Page " + i + " done !");
       }
+
+      // Write the links in a file
+      const finalObject = {
+        [scrappedLink.name]: allLinks,
+      };
+
+      let data = JSON.stringify(finalObject);
+      fs.appendFile("data.json", data.slice(1, data.length - 1), (err) => {
+        if (err) throw err;
+      });
     }
 
     if (
       scrappedLinksObject.indexOf(scrappedLink) !==
       scrappedLinksObject.length - 1
     ) {
+      console.log('append')
       fs.appendFile("data.json", ",", (err) => {
         if (err) throw err;
       });

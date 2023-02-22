@@ -7,17 +7,26 @@ var configJson = require("../config.json");
 
 // Function to write in a file
 function writeInFile(key, content) {
+  // Create the folder if it doesn't exist
+  if (!fs.existsSync(key)) {
+    fs.mkdirSync(key);
+  }
+
   fs.appendFile(key + "/" + key + ".csv", content, (err) => {
     if (err) {
       console.error(err);
       return;
     }
-    console.log("Successfully written data to file");
   });
 }
 
 // Function to download a picture
 function downloadPicture(key, ref, link) {
+  // Create the folder if it doesn't exist
+  if (!fs.existsSync(key)) {
+    fs.mkdirSync(key);
+  }
+
   download
     .image({
       url: link,
@@ -36,17 +45,12 @@ function removeNewlines(str) {
   str = str
     .toString()
     .trim()
-    .replace(/(\r\n|\n|\r)/g, "");
+    .replace(/(\r\n|\n|\r)/g, " ");
   return str;
 }
 
 // Function to fetch data from one page
 async function fetchOnePage(page, link, key) {
-  // Create the folder if it doesn't exist
-  if (!fs.existsSync(key)) {
-    fs.mkdirSync(key);
-  }
-
   let siteConfigObject = configJson.sites.find(
     (site) => site.link.name === key
   );
@@ -55,15 +59,21 @@ async function fetchOnePage(page, link, key) {
   await page.goto(link);
 
   // Get the data
-  const id = await page.locator(siteConfigObject.data.id.selector).innerText();
+  const id = await page
+    .locator(siteConfigObject.data.id.selector)
+    .first()
+    .innerText();
 
   let finalInformationsString = id + "\t";
   for (const dataToFetch of siteConfigObject.data.informations) {
-    const fetchedData = (
-      await page.locator(dataToFetch.selector).allTextContents()
-    )
-      .map((txt) => removeNewlines(txt))
-      .join(" / ");
+    const fetchedData = dataToFetch.multiple
+      ? (await page.locator(dataToFetch.selector).allTextContents())
+          .map((txt) => removeNewlines(txt))
+          .join(" / ")
+      : removeNewlines(
+          await page.locator(dataToFetch.selector).first().innerText()
+        );
+
     finalInformationsString +=
       fetchedData +
       (siteConfigObject.data.informations.indexOf(dataToFetch) ===
@@ -95,6 +105,13 @@ async function main() {
   const page = await browser.newPage();
 
   for (key in allLinksJson) {
+    configKey = configJson.sites.find((site) => site.link.name === key);
+    let categoryString =
+      configKey.data.id.name +
+      "\t" +
+      configKey.data.informations.map((data) => data.name).join("\t");
+
+    writeInFile(key, categoryString + "\r\n");
     for (link of allLinksJson[key]) {
       await fetchOnePage(page, link, key);
       await page.waitForTimeout(1000);

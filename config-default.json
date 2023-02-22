@@ -1,8 +1,8 @@
 {
   "sites": [
     {
-      "links": {
-        "name": "montres",
+      "link": {
+        "name": "montrescasio",
         "url": "https://www.casio.com/fr/watches/",
         "nbPage": 0,
         "itemsSelector": ".cmp-product_panel__inner a"
@@ -15,20 +15,58 @@
         "informations": [
           {
             "name": "subtitle",
+            "multiple": false,
             "selector": ".p-product_detail-subttl"
           },
           {
             "name": "description",
+            "multiple": false,
             "selector": ".p-product_detail-feature-txt"
           },
           {
             "name": "details",
+            "multiple": true,
             "selector": ".p-product_detail-spec-accordion__panel-item"
           }
         ],
         "img": {
           "baseUrl": "https://www.casio.com",
           "selector": ".p-product_detail-visual__itm-img-button img"
+        }
+      }
+    },
+    {
+      "link": {
+        "name": "montresandco",
+        "url": "https://www.montresandco.com/montre-homme-201?page=",
+        "nbPage": 5,
+        "itemsSelector": "a.product-thumbnail"
+      },
+      "data": {
+        "id": {
+          "name": "id",
+          "selector": ".product-head p.fs-tiny"
+        },
+        "informations": [
+          {
+            "name": "nom",
+            "multiple": false,
+            "selector": ".titleProduct h1.title-small"
+          },
+          {
+            "name": "description",
+            "multiple": false,
+            "selector": ".product-description"
+          },
+          {
+            "name": "details",
+            "multiple": true,
+            "selector": ".product-container .w-100 .data-sheet *"
+          }
+        ],
+        "img": {
+          "baseUrl": "",
+          "selector": "img.product-modal-img-large"
         }
       }
     }
