@@ -1,0 +1,36 @@
+{
+  "sites": [
+    {
+      "link": {
+        "name": "montres",
+        "url": "https://www.casio.com/fr/watches/",
+        "nbPage": 0,
+        "itemsSelector": ".cmp-product_panel__inner a"
+      },
+      "data": {
+        "id": {
+          "name": "id",
+          "selector": ".cmp-hdg__ttl"
+        },
+        "informations": [
+          {
+            "name": "subtitle",
+            "selector": ".p-product_detail-subttl"
+          },
+          {
+            "name": "description",
+            "selector": ".p-product_detail-feature-txt"
+          },
+          {
+            "name": "details",
+            "selector": ".p-product_detail-spec-accordion__panel-item"
+          }
+        ],
+        "img": {
+          "baseUrl": "https://www.casio.com",
+          "selector": ".p-product_detail-visual__itm-img-button img"
+        }
+      }
+    }
+  ]
+}
