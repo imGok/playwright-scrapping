@@ -12,9 +12,9 @@
 ## Link generation
  - URL in "Link" must have "/" at the end
  - If nbPage equals 0, it will be considered as a infinite scroll page
- - The selector of items must target a <a> tag  
+ - The selector of items must target a `<a>` tag  
   
 ## Data generation
  - ID in data must be unique and without any special character
  - baseURL in img must not contain a "/" at the end
- - The selectof of img must target a <img> tag
+ - The selectof of img must target a `<img>` tag
