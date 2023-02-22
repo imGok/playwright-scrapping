@@ -10,7 +10,7 @@
 
 # Configuration   
 ## Link generation
- - URL in "Link" must have "/" àt the end
+ - URL in "Link" must have "/" at the end
  - If nbPage equals 0, it will be considered as a infinite scroll page
  - The selector of items must target a <a> tag  
   
