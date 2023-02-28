@@ -67,7 +67,7 @@ async function fetchOnePage(page, link, key) {
     (await page
       .locator(siteConfigObject.data.id.selector)
       .first()
-      .innerText()) || "Pas de référence";
+      .innerText());
 
   let finalInformationsString = id + "\t";
   for (const dataToFetch of siteConfigObject.data.informations) {
@@ -76,7 +76,7 @@ async function fetchOnePage(page, link, key) {
           .map((txt) => removeNewlines(txt))
           .join(" / ")
       : removeNewlines(
-          await page.locator(dataToFetch.selector).first().innerText()
+          (await page.locator(dataToFetch.selector).allTextContents()[0]) ?? ""
         ) ?? " ";
 
     finalInformationsString +=
