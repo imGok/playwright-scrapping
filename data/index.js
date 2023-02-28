@@ -92,16 +92,17 @@ async function fetchOnePage(page, link, key) {
   writeInFile(key, finalInformationsString + "\r\n");
 
   // Get the image link
-  const imgLink = await page
-    .locator(siteConfigObject.data.img.selector)
-    .first()
-    .getAttribute("src");
+  const imgLinkLocator = page.locator(siteConfigObject.data.img.selector);
 
-  if (imgLink) {
-    const imgLinkFull = siteConfigObject.data.img.baseUrl + imgLink;
+  if ((await imgLinkLocator.count()) > 0) {
+    const imgLinkFull =
+      siteConfigObject.data.img.baseUrl +
+      (await imgLinkLocator.first().getAttribute("src"));
 
     // Download the image
     downloadPicture(key, id, imgLinkFull);
+  } else {
+    console.log("No image found for " + id);
   }
 }
 
