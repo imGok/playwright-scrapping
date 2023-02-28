@@ -63,28 +63,29 @@ async function fetchOnePage(page, link, key) {
   await page.goto(link);
 
   // Get the data
-  const id =
-    (await page
-      .locator(siteConfigObject.data.id.selector)
-      .first()
-      .innerText());
+  const id = await page
+    .locator(siteConfigObject.data.id.selector)
+    .first()
+    .innerText();
 
   let finalInformationsString = id + "\t";
   for (const dataToFetch of siteConfigObject.data.informations) {
-    const fetchedData = dataToFetch.multiple
-      ? (await page.locator(dataToFetch.selector).allTextContents())
-          .map((txt) => removeNewlines(txt))
-          .join(" / ")
-      : removeNewlines(
-          (await page.locator(dataToFetch.selector).allTextContents()[0]) ?? ""
-        ) ?? " ";
+    const locator = page.locator(dataToFetch.selector);
 
-    finalInformationsString +=
-      fetchedData +
-      (siteConfigObject.data.informations.indexOf(dataToFetch) ===
-      siteConfigObject.data.informations.length - 1
-        ? ""
-        : "\t");
+    if ((await locator.count()) > 0) {
+      const fetchedData = dataToFetch.multiple
+        ? (await locator.allTextContents())
+            .map((txt) => removeNewlines(txt))
+            .join(" / ")
+        : removeNewlines((await locator.first().innerText()) ?? "") ?? " ";
+
+      finalInformationsString +=
+        fetchedData +
+        (siteConfigObject.data.informations.indexOf(dataToFetch) ===
+        siteConfigObject.data.informations.length - 1
+          ? ""
+          : "\t");
+    }
   }
 
   // Write the data in a file
