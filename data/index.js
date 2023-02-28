@@ -30,7 +30,7 @@ function downloadPicture(key, ref, link) {
   download
     .image({
       url: link,
-      dest: "../../data/" + key + "/" + ref + ".png",
+      dest: "../../data/" + key + "/" + ref.replaceAll("/", "_") + ".png",
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -63,10 +63,11 @@ async function fetchOnePage(page, link, key) {
   await page.goto(link);
 
   // Get the data
-  const id = await page
-    .locator(siteConfigObject.data.id.selector)
-    .first()
-    .innerText();
+  const id =
+    (await page
+      .locator(siteConfigObject.data.id.selector)
+      .first()
+      .innerText()) || "Pas de référence";
 
   let finalInformationsString = id + "\t";
   for (const dataToFetch of siteConfigObject.data.informations) {
@@ -76,7 +77,7 @@ async function fetchOnePage(page, link, key) {
           .join(" / ")
       : removeNewlines(
           await page.locator(dataToFetch.selector).first().innerText()
-        );
+        ) ?? " ";
 
     finalInformationsString +=
       fetchedData +
@@ -86,19 +87,21 @@ async function fetchOnePage(page, link, key) {
         : "\t");
   }
 
-  // Get the image link
-  const imgLink =
-    siteConfigObject.data.img.baseUrl +
-    (await page
-      .locator(siteConfigObject.data.img.selector)
-      .first()
-      .getAttribute("src"));
-
   // Write the data in a file
   writeInFile(key, finalInformationsString + "\r\n");
 
-  // Download the image
-  downloadPicture(key, id, imgLink);
+  // Get the image link
+  const imgLink = await page
+    .locator(siteConfigObject.data.img.selector)
+    .first()
+    .getAttribute("src");
+
+  if (imgLink) {
+    const imgLinkFull = siteConfigObject.data.img.baseUrl + imgLink;
+
+    // Download the image
+    downloadPicture(key, id, imgLinkFull);
+  }
 }
 
 async function main() {
