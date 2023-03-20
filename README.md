@@ -13,6 +13,7 @@
  - URL in "Link" must have "/" at the end
  - If nbPage equals 0, it will be considered as a infinite scroll page
  - The selector of items must target a `<a>` tag  
+ - The selecot "loadMoreBtnSelector" is optional and must target a `<button>` or `<a>` tag  
   
 ## Data generation
  - ID in data must be unique and without any special character

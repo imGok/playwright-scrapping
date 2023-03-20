@@ -44,6 +44,17 @@ async function main() {
       // Scroll to the bottom of the page
       await infiniteScroll(page);
 
+      if (scrappedLink.loadMoreBtnSelector !== undefined || null) {
+        while (
+          await page.locator(scrappedLink.loadMoreBtnSelector).isVisible()
+        ) {
+          await page
+            .locator(scrappedLink.loadMoreBtnSelector)
+            .click({ force: true });
+          await infiniteScroll(page);
+        }
+      }
+
       // Get all the links
       // Selector must be <a> tag
       const links = await page.$$eval(scrappedLink.itemsSelector, (el) => {
@@ -92,7 +103,7 @@ async function main() {
       scrappedLinksObject.indexOf(scrappedLink) !==
       scrappedLinksObject.length - 1
     ) {
-      console.log('append')
+      console.log("append");
       fs.appendFile("data.json", ",", (err) => {
         if (err) throw err;
       });

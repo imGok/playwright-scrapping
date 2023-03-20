@@ -5,6 +5,7 @@
         "name": "montrescasio",
         "url": "https://www.casio.com/fr/watches/",
         "nbPage": 0,
+        "loadMoreBtnSelector": ".getbowtied_ajax_load_button a",
         "itemsSelector": ".cmp-product_panel__inner a"
       },
       "data": {
